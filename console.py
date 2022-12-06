@@ -2,6 +2,7 @@
 """ Console Module """
 import cmd
 import sys
+import shlex
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -113,29 +114,37 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def do_create(self, args):
+    def do_create(self, arg):
         """ Create an object of any class"""
-        if not args:
+        args = arg.split()
+        if len(args) == 0:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+        elif args[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
         else:
-            new_instance = HBNBCommand.classes[args]()
-            obj = new_instance()
-            if len(args) > 1:
-                for i in range(1, len(args)):
-                    pair = args[i].split('=')
-                    if len(pair) == 2:
-                        pair[1] = pair[1].replace('_', ' ')
+            new_dict = {}
+            for arg in args:
+                if "=" in arg:
+                    parser = arg.split('=', 1)
+                    key = parser[0]
+                    value = parser[1]
+                    if value[0] == value[-1] == '"':
+                        value = shlex.split(value)[0].replace('_', ' ')
+                    else:
                         try:
-                            setattr(obj, pair[0], eval(pair[1]))
-                        except (SyntaxError, NameError):
-                            setattr(obj, pair[0], pair[1])
-        storage.save()
-        print(new_instance.id)
-        storage.save()
+                            value = int(value)
+                        except:
+                            try:
+                                value = float(value)
+                            except:
+                                continue
+                    new_dict[key] = value
+                    instance = HBNBCommand.classes[args[0]](new_dict)
+
+        print(instance.id)
+        instance.save()
 
     def help_create(self):
         """ Help information for the create method """
