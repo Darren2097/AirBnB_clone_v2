@@ -12,7 +12,7 @@ class FileStorage:
         """Returns a dictionary of models currently in storage"""
 
         new_obj = {}
-        if cls:
+        if cls is not None:
             for key, value in self.__objects.items():
                 if cls == value.__class__ or cls == value.__class__.__name__:
                     new_dict[key] = value
@@ -60,7 +60,7 @@ class FileStorage:
         """delete obj from __objects if it’s inside -
         if obj is equal to None, the method should not do anything"""
 
-        if obj:
+        if obj is not None:
             key = '{}.{]'.format(type(obj).__name__, obj.id)
             if key in self.__objects:
                 del self.__objects[key]
