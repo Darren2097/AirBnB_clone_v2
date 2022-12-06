@@ -68,6 +68,7 @@ class DBStorage:
 
         if obj is not None:
             self.__session.delete(obj)
+            self.save()
 
     def reload(self):
         """reloads data from the database"""
@@ -77,3 +78,8 @@ class DBStorage:
                 bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
+
+    def close(self):
+        """Close the working SQLAlchemy session."""
+
+        self.__session.close()

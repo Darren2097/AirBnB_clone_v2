@@ -11,8 +11,8 @@ from models.amenity import Amenity
 from models.review import Review
 import os
 
-classes = {"User": User, "BaseModel": BaseModel, "Place": Place,
-        "State": State, "City": City, "Amenity": Amenity,"Review": Review}
+classes = {"User": User, "BaseModel": BaseModel, "Place": Place, 
+        "State": State, "City": City, "Amenity": Amenity, "Review": Review}
 
 if os.getenv('HBNB_TYPE_STORAGE') == 'db':
     from models.engine.db_storage import DBStorage
