@@ -114,6 +114,27 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
+    def key_parser(self, args):
+        """parses the keys"""
+        new_dict = {}
+        for arg in args:
+            if "=" in arg:
+                parser = arg.split('=', 1)
+                key = parser[0]
+                value = parser[1]
+                if value[0] == value[-1] == '"':
+                    value = shlex.split(value)[0].replace('_', ' ')
+                else:
+                    try:
+                        value = int(value)
+                    except:
+                        try:
+                            value = float(value)
+                        except:
+                            continue
+                new_dict[key] = value
+            return new_dict
+
     def do_create(self, arg):
         """ Create an object of any class"""
         args = arg.split()
@@ -124,27 +145,11 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         else:
-            new_dict = {}
-            for arg in args:
-                if "=" in arg:
-                    parser = arg.split('=', 1)
-                    key = parser[0]
-                    value = parser[1]
-                    if value[0] == value[-1] == '"':
-                        value = shlex.split(value)[0].replace('_', ' ')
-                    else:
-                        try:
-                            value = int(value)
-                        except:
-                            try:
-                                value = float(value)
-                            except:
-                                continue
-                    new_dict[key] = value
-                    instance = HBNBCommand.classes[args[0]](new_dict)
+            new_dict = self.key_parser(args[1:])
+            new_instance = HBNBCommand.classes[args[0]](new_dict)
 
-        print(instance.id)
-        instance.save()
+        print(new_instance.id)
+        new_instance.save()
 
     def help_create(self):
         """ Help information for the create method """
