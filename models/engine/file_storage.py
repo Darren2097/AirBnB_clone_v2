@@ -61,7 +61,7 @@ class FileStorage:
         if obj is equal to None, the method should not do anything"""
 
         if obj is not None:
-            key = '{}.{]'.format(type(obj).__name__, obj.id)
+            key = '{}.{}'.format(type(obj).__name__, obj.id)
             if key in self.__objects:
                 del self.__objects[key]
         else:
