@@ -7,6 +7,12 @@ import os
 from sqlalchemy.orm import relationship
 import models
 
+place_amenity = Table('place_amenity', Base.metadata, Column(
+    'place_id', String(60), ForeignKey('places.id'),
+    nullable=False, primary_key=True), Column(
+        'amenity_id', String(60), ForeignKey('amenities.id'),
+        nullable=False, primary_key=True))
+
 
 class Place(BaseModel, Base):
     """ A place to stay """
@@ -42,12 +48,30 @@ class Place(BaseModel, Base):
 
         @property
         def reviews(self):
-        """
-        """
-        
-        reviews_dict = models.storage.all('Review')
-        reviews_list = []
-        for review in reviews_dict.values():
-            if review.place_id == self.id:
-                review_list.append(review)
-        return review
+            """reviews method"""
+            
+            reviews_dict = models.storage.all('Review')
+            reviews_list = []
+            for review in reviews_dict.values():
+                if review.place_id == self.id:
+                    review_list.append(review)
+            return review
+
+        @property
+        def amenities(self):
+            """Gets the list of Amenity objects"""
+
+            obj_list = []
+            objs = models.storage.all('Amenity')
+            for amenity in objs.values():
+                if amenity.id in amenity_ids:
+                    obj_list.append(amenity)
+            return obj_list
+
+        @amenities.setter
+        def amenities(self, obj):
+            """Sets an amenity to Place"""
+
+            if isinstance(obj, Amenity):
+                if self.id == obj.place_id:
+                    self.amenity_ids.append(obj.id)
