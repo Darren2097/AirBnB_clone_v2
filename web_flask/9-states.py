@@ -11,6 +11,7 @@ app = Flask(__name__, template_folder='templates')
 def list_states():
     """lists all states"""
 
+    id = None
     states = models.storage.all(State).values()
     return render_template('9-states.html', states=states, id=id)
 
@@ -18,7 +19,7 @@ def list_states():
 @app.route('/states/<id>', strict_slashes=False)
 def list_state_cities(id=None):
     """lists all cities by their states"""
-    
+
     found = False
     states = models.storage.all(State).values()
     for state in states:
@@ -27,7 +28,7 @@ def list_state_cities(id=None):
             states = [state]
     if found is False:
         states = []
-        
+
     return render_template('9-states.html', states=states, id=id)
 
 
