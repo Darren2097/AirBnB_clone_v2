@@ -37,10 +37,10 @@ def pythontext(text="is cool"):
 
 
 @app.route('/number/<int:n>', strict_slashes=False)
-def intstr(num):
+def intstr(n):
     """returns int status message"""
 
-    return "{} is a number".format(num)
+    return "{} is a number".format(n)
 
 
 if __name__ == '__main__':
